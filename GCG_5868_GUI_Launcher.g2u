@@ -1,0 +1,40 @@
+Program.Sub.Preflight.Start
+Program.Sub.Preflight.End
+
+Program.Sub.Main.Start
+F.Intrinsic.Control.SetErrorHandler("Sub_Err")
+F.Intrinsic.Control.ClearErrors
+
+V.Local.sError.Declare(String)
+
+v.Local.iRet.Declare(Long)
+
+'coded by SFF 01292020, this script just launces the menu items for WIP to FG and Quality Rej/Disp from Main GUI Script 2 and 3
+'for Elmet Technologies quote 11924
+
+f.Intrinsic.Control.If(v.Caller.Hook,=,15770)
+	'launch wip to fg from script 2
+	f.Intrinsic.Task.LaunchGSSAsync("JB0052GI","","",v.Local.iRet)	
+f.Intrinsic.Control.ElseIf(v.Caller.Hook,=,15780)
+	'launch quality from script 3
+	f.Intrinsic.Task.LaunchGSSAsync("JB0027","","",v.Local.iRet)
+f.Intrinsic.Control.ElseIf(v.Caller.Hook,=,15710)
+	'rename script 2 and 3
+	v.Passed.000020.Set("WIPtoFG")
+	v.Passed.000021.Set("Rej/Disp")
+f.Intrinsic.Control.Else
+	'else end
+	f.Intrinsic.Control.End	
+f.Intrinsic.Control.EndIf
+
+'end
+f.Intrinsic.Control.End
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("Sub_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	Function.Intrinsic.String.Concat("Project: Project",V.Ambient.Newline,V.Ambient.Newline,"Subroutine: ",V.Ambient.CurrentSubroutine,V.Ambient.NewLine,"Error Occurred ",V.Ambient.ErrorNumber," with description ",V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+Function.Intrinsic.Control.EndIf
+Program.Sub.Main.End
